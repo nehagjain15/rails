@@ -327,8 +327,10 @@ module ActiveRecord
       end
 
       def find_session(id)
-        @@session_class.find_by_session_id(id) ||
-          @@session_class.new(:session_id => id, :data => {})
+        ActiveRecord::Base.transaction do
+          @@session_class.find_by_session_id(id) ||
+            @@session_class.new(:session_id => id, :data => {})
+        end
       end
   end
 end
